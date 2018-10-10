@@ -1,0 +1,43 @@
+.FileDrop {
+    margin: 10vh;
+    align-content: center;
+}
+
+.Dropzone {
+    padding: 10px;
+    min-width: 80vh;
+    min-height: 20vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 2px solid black;
+    border-radius: 0.2em;
+}
+
+.DropzoneActive {
+    padding: 10px;
+    min-width: 80vh;
+    min-height: 20vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 2px solid green;
+    border-radius: 0.2em;
+    color: green;
+}
+
+.DropzoneReject {
+    padding: 10px;
+    min-width: 80vh;
+    min-height: 20vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 2px solid darkred;
+    border-radius: 0.2em;
+    color: darkred;
+}
+
+.DroppedFileInfo {
+    color: darkgrey;
+}

@@ -1,0 +1,9 @@
+.Header {
+    background-color: royalblue;
+    min-width: 100%;
+    min-height: 20vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: white;
+}
