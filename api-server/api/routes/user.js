@@ -1,12 +1,18 @@
 const express = require('express');
-const Compute = require('../../compute');
+const { VideoComputeResource, AudioComputeResource } = require('../../compute');
 const validateRequest = require('../auth');
 const fs = require('fs');
-var computeResource = new Compute();
+const config = require('../config.json')
+
+var vidProcess = new VideoComputeResource(config);
+var audProcess = new AudioComputeResource(config);
 
 // This router exposes any end points that are to be useable for customers
 var router = express.Router();
 router.use(validateRequest);
+
+var fileMap = {};
+var fileCounter = 1;
 
 router.get('/', function (req, res) {
     let computeValue = computeResource.getSampleMessage();
@@ -17,11 +23,13 @@ router.post('/upload', function (req, res) {
     console.log('Request received at /upload');
     if (req.files && req.files.length === 1) {
         req.files.forEach(element => {
-            fs.renameSync('./uploads/' + element.filename, './uploads/' + element.originalname, err => {
+            fs.renameSync(element.path, element.destination + element.originalname, err => {
                 console.log(err);
             });
         });
-        res.end('File(s) uploaded');
+        fileMap[fileCounter] = req.files[0].originalname; 
+        res.end('File ID ' + fileCounter);
+        fileCounter++;
     } else if (!req.files || req.files.length === 0) {
         res.statusCode = 404;
         res.end('File not received');
@@ -33,6 +41,57 @@ router.post('/upload', function (req, res) {
         });
         res.statusCode = 400;
         res.end('Only one file per request');
+    }
+});
+
+router.get('/name', function(req, res) {
+    console.log('Request received at /name');
+    let id = req.get('fileId');
+    if (fileMap[id]) {
+        res.end(JSON.stringify({ fileName: fileMap[id]}));
+    } else {
+        res.statusCode = 404;
+        res.end('File name not found');
+    }
+});
+
+router.post('/videoProcess', async function(req, res) { 
+    console.log('Request received at /videoProcess');
+    let id = req.get('fileId');
+    if (fileMap[id]) {
+        let result = await vidProcess.process(fileMap[id]);
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ status: result }));
+    } else {
+        res.statusCode = 404;
+        res.end('File not found');
+    }
+});
+
+router.post('/audioProcess', async function(req, res) { 
+    console.log('Request received at /audioProcess');
+    let id = req.get('fileId');
+    if (fileMap[id]) {
+        let result = await audProcess.process(fileMap[id]);
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ status: result }));
+    } else {
+        res.statusCode = 404;
+        res.end('File not found');
+    }
+});
+
+router.post('/process', async function(req, res) { 
+    console.log('Request received at /process');
+    let id = req.get('fileId');
+    if (fileMap[id]) {
+        let audResult = await audProcess.process(fileMap[id]);
+        let vidResult = await vidProcess.process(fileMap[id]);
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ videoStatus: vidResult, audioStatus: audResult }));
+    } else {
+        res.statusCode = 404;
+        res.end('File not found');
     }
 });
 

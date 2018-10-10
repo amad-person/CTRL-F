@@ -1,4 +1,5 @@
 const config = require('../config/settings');
+const { execSync } = require('child_process');
 
 /**
  * Defines structure for a compute resource. Any backend processing required to happen to be included in this directory.
@@ -9,25 +10,62 @@ class AbstractComputeResource {
         this._settings = settings || config;
     }
 
-    getSampleMessage() {
+    async process() {
         throw new Error('Not implemented');
     }
 }   
 
 
 /** 
- * Sample compute resource.
+ * Video compute resource.
  */
-class Compute extends AbstractComputeResource{
+class VideoComputeResource extends AbstractComputeResource {
 
     constructor(settings) {
         super();
         this._settings = settings || config;
     }
 
-    getSampleMessage() {
-        return 'Message received from compute';
+    async process(fileName) {
+        var ret = execSync('python compute/test.py');
+        return ret.toString('utf8');
     }
 }
 
-module.exports = Compute;
+
+/** 
+ * Audio compute resource.
+ */
+class AudioComputeResource extends AbstractComputeResource {
+
+    constructor(settings) {
+        super();
+        this._settings = settings || config;
+    }
+
+    async process(fileName) {
+        return 'Processing file audio ' + fileName;
+    }
+
+    getAudioFromFile(fileName) {
+
+    }
+
+    getAudioForInterval(fileName, start, end) {
+
+    }
+
+    queryAudioFile(fileName) {
+
+    }
+
+    findStringInVideo(fileName, queryString) {
+        
+    }
+}
+
+
+module.exports = {
+    VideoComputeResource,
+    AudioComputeResource
+};

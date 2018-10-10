@@ -6,13 +6,117 @@
 	},
 	"item": [
 		{
-			"name": "Default",
+			"name": "Video Process",
 			"request": {
-				"method": "GET",
-				"header": [],
+				"method": "POST",
+				"header": [
+					{
+						"key": "API_KEY",
+						"value": "sampleKey1"
+					},
+					{
+						"key": "fileId",
+						"value": "1"
+					}
+				],
 				"body": {},
 				"url": {
-					"raw": ""
+					"raw": "http://localhost:3001/videoProcess",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"videoProcess"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Process",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "API_KEY",
+						"value": "sampleKey1"
+					},
+					{
+						"key": "fileId",
+						"value": "1"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3001/videoProcess",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"videoProcess"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Audio Process",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "API_KEY",
+						"value": "sampleKey1"
+					},
+					{
+						"key": "fileId",
+						"value": "1"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3001/audioProcess",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"audioProcess"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get name",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "API_KEY",
+						"value": "sampleKey1"
+					},
+					{
+						"key": "fileId",
+						"value": "1"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3001/name",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"name"
+					]
 				}
 			},
 			"response": []
@@ -28,7 +132,7 @@
 					},
 					{
 						"key": "API_KEY",
-						"value": "sampleKey1"
+						"value": "sampleKey2"
 					}
 				],
 				"body": {
@@ -36,13 +140,11 @@
 					"formdata": [
 						{
 							"key": "",
-							"value": "",
 							"type": "file"
 						},
 						{
-							"key": "new_file_name",
-							"value": "test.txt",
-							"type": "text",
+							"key": "",
+							"type": "file",
 							"disabled": true
 						}
 					]
