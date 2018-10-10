@@ -1,0 +1,205 @@
+{
+	"info": {
+		"_postman_id": "3870a4d0-e2f8-40e0-9c2c-deb68eb67288",
+		"name": "API Template",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Video Process",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "API_KEY",
+						"value": "sampleKey1"
+					},
+					{
+						"key": "fileId",
+						"value": "1"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3001/videoProcess",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"videoProcess"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Process",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "API_KEY",
+						"value": "sampleKey1"
+					},
+					{
+						"key": "fileId",
+						"value": "1"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3001/process",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"process"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Audio Process",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "API_KEY",
+						"value": "sampleKey1"
+					},
+					{
+						"key": "fileId",
+						"value": "1"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3001/audioProcess",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"audioProcess"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get name",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "API_KEY",
+						"value": "sampleKey1"
+					},
+					{
+						"key": "fileId",
+						"value": "1"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3001/name",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"name"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3001/upload",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					},
+					{
+						"key": "API_KEY",
+						"value": "sampleKey2"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "",
+							"type": "file"
+						},
+						{
+							"key": "",
+							"type": "file",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3001/upload",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "API_KEY",
+						"value": "sampleKey1"
+					},
+					{
+						"key": "fileId",
+						"value": "1"
+					},
+					{
+						"key": "queryString",
+						"value": "asdasd"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3001/query",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"query"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
