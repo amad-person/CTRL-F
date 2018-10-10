@@ -14,39 +14,17 @@ router.get('/', function (req, res) {
 });
 
 router.post('/upload', function (req, res) {
+    console.log('Request received at /upload');
+    // console.log('Request: ', req.headers);
+    console.log('req.files = ', req.files);
     var fName = undefined;
     if (req.files) {
-        fs.exists(req.files[0].path, function (exists) {
-            fName = req.files[0].filename;
-            fs.renameSync('./uploads/' + fName, './uploads/input.mp4', err => {
-                throw err;
+        req.files.forEach(element => {
+            fs.renameSync('./uploads/' + element.filename, './uploads/' + element.originalname, err => {
+                console.log(err);
             });
-
-            if (!exists) {
-                res.statusCode = 404;
-                res.end('File not received');
-            } else {
-                fs.readdir('./uploads', function (err, items) {
-                    if (err) {
-                        console.log('Error: ', err);
-                    }
-        
-                    items.forEach(function (item) {
-                        if (item !== 'input.mp4') {
-                            fs.unlink('./uploads/' + item, (err) => {
-                                if (err) throw err;
-                            });
-                        } else {
-                            fs.rename('./uploads/' + item, './uploads/' + 'input.mp4', err => {
-                                if (err) throw err;
-                            })
-                        }
-                    });
-        
-                });
-                res.end('File uploaded');
-            }
         });
+        res.end('File(s) uploaded');
     }
 });
 
