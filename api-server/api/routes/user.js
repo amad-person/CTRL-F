@@ -1,11 +1,12 @@
 const express = require('express');
-const { VideoComputeResource, AudioComputeResource } = require('../../compute');
+const { VideoComputeResource, AudioComputeResource, CollatedComputeResource} = require('../../compute');
 const validateRequest = require('../auth');
 const fs = require('fs');
 const config = require('../config.json')
 
 var vidProcess = new VideoComputeResource(config);
 var audProcess = new AudioComputeResource(config);
+var combinedResource = new CollatedComputeResource(config);
 
 // This router exposes any end points that are to be useable for customers
 var router = express.Router();
@@ -89,6 +90,22 @@ router.post('/process', async function(req, res) {
         let vidResult = await vidProcess.process(fileMap[id]);
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify({ videoStatus: vidResult, audioStatus: audResult }));
+    } else {
+        res.statusCode = 404;
+        res.end('File not found');
+    }
+});
+
+router.get('/query', async function(req, res) {
+    console.log('Request received at /query');
+    let id = req.get('fileId');
+    let queryString = req.get('queryString');
+    if (fileMap[id]) {
+        let audResults = await audProcess.query(fileMap[id], queryString);
+        let vidResults = await vidProcess.query(fileMap[id], queryString);
+        let finalResults = await combinedResource.collateResults(audResults, vidResults);
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ result: finalResults }));
     } else {
         res.statusCode = 404;
         res.end('File not found');

@@ -30,6 +30,10 @@ class VideoComputeResource extends AbstractComputeResource {
         var ret = execSync('python compute/test.py');
         return ret.toString('utf8');
     }
+
+    async query(fileName, queryString) {
+        return 'Video query results';
+    }
 }
 
 
@@ -59,13 +63,26 @@ class AudioComputeResource extends AbstractComputeResource {
 
     }
 
-    findStringInVideo(fileName, queryString) {
-        
+    async query(fileName, queryString) {
+        return 'audio query results';
     }
 }
 
+class CollatedComputeResource extends AbstractComputeResource {
+
+    constructor(settings) {
+        super();
+        this._settings = settings;
+    }
+
+    async collateResults(audResults, vidResults) {
+        return audResults + ' ' + vidResults;
+    }
+
+}
 
 module.exports = {
     VideoComputeResource,
-    AudioComputeResource
+    AudioComputeResource,
+    CollatedComputeResource
 };

@@ -50,14 +50,14 @@
 				],
 				"body": {},
 				"url": {
-					"raw": "http://localhost:3001/videoProcess",
+					"raw": "http://localhost:3001/process",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3001",
 					"path": [
-						"videoProcess"
+						"process"
 					]
 				}
 			},
@@ -158,6 +158,44 @@
 					"port": "3001",
 					"path": [
 						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "API_KEY",
+						"value": "sampleKey1"
+					},
+					{
+						"key": "fileId",
+						"value": "1"
+					},
+					{
+						"key": "queryString",
+						"value": "asdasd"
+					},
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3001/query",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"query"
 					]
 				}
 			},
