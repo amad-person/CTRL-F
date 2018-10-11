@@ -39,5 +39,6 @@
 }
 
 .DroppedFileInfo {
+    padding: 10px;
     color: darkgrey;
 }

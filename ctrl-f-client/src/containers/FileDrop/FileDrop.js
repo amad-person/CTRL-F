@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import ReactDropzone from 'react-dropzone';
+import Dropzone from 'react-dropzone';
 import request from 'superagent';
 import './FileDrop.css'
 
 class FileDrop extends Component {
     constructor(props) {
         super(props);
-        this.state = { files: [] }
+        this.state = { files: [] };
     }
 
+    // accept file and send to server
     onDrop = (files) => {
         this.setState({
             files
@@ -24,12 +25,31 @@ class FileDrop extends Component {
         req.attach(files[0].name, files[0]);
 
         req.end();
+
+        // send data to parent component
+        const fileData = {
+            files: this.state.files,
+            doneUploading: true
+        };
+
+        this.props.dataFromFileDrop(fileData);
+    };
+
+    getFileSize = (size) => {
+        let sizeExt = ['bytes', 'KB', 'MB', 'GB'], i = 0;
+
+        while (size > 900) {
+            size /= 1000;
+            i++;
+        }
+
+        return '' + (Math.round(size * 100) / 100) + ' ' + sizeExt[i];
     };
 
     render() {
         return (
             <div className="FileDrop">
-                <ReactDropzone
+                <Dropzone
                     accept="video/mp4"
                     className="Dropzone"
                     activeClassName="DropzoneActive"
@@ -39,7 +59,7 @@ class FileDrop extends Component {
                 >
                     {({ isDragAccept, isDragReject, acceptedFiles, rejectedFiles }) => {
                         if (acceptedFiles.length || rejectedFiles.length) {
-                            return `Accepted file, please wait for CTRL-F!`;
+                            return `Uploaded file, now click on process!`;
                         }
                         if (isDragAccept) {
                             return "You can upload this file!";
@@ -49,8 +69,8 @@ class FileDrop extends Component {
                         }
                         return "Drop a video file, or click to browse.";
                     }}
-                </ReactDropzone>
-                <div className="DroppedFileInfo">{this.state.files.map(f => <p key={f.name}>{f.name} - {f.size} bytes</p>)}</div>
+                </Dropzone>
+                <div className="DroppedFileInfo">{this.state.files.map(f => <p key={f.name}>{f.name} ~ {this.getFileSize(f.size)}</p>)}</div>
             </div>
         );
     };
