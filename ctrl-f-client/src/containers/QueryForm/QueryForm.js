@@ -32,8 +32,8 @@ class QueryForm extends Component {
             .set('API_KEY', 'sampleKey1')
             .set('queryString', this.state.value)
             .then((res) => {
-                responseParsed.audioSeekTimes = res.body.audioParameters.sort();
-                responseParsed.videoSeekTimes = res.body.videoParameters.sort();
+                responseParsed.audioSeekTimes = res.body.audioResponse.sort();
+                responseParsed.videoSeekTimes = res.body.videoResponse.sort();
             });
 
         this.props.dataFromQuery(responseParsed);

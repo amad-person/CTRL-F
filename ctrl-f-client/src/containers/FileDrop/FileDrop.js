@@ -24,7 +24,9 @@ class FileDrop extends Component {
         // attach file to POST request
         req.attach(files[0].name, files[0]);
 
-        req.end();
+        req.end(() => {
+            console.log("Upload done.");
+        });
 
         // send data to parent component
         const fileData = {
