@@ -19,6 +19,7 @@
     "express": "",
     "ffmpeg": "0.0.4",
     "multer": "^1.4.0",
+    "underscore": "^1.9.1",
     "watson-developer-cloud": "^3.11.1"
   }
 }

@@ -1,5 +1,6 @@
 const config = require('../config/settings');
 const { execSync } = require('child_process');
+const _ = require('underscore');
 var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
 var fs = require('fs');
 var ffmpeg = require('ffmpeg');
@@ -130,49 +131,67 @@ class AudioComputeResource extends AbstractComputeResource {
 
 	convertVideoToAudio(videoFile) {
 		// convert
-		var dir = './audio';
+		var dir = '/tmp/audio';
 		if (!fs.existsSync(dir)) {
 			fs.mkdirSync(dir);
 		}
-		var pathToVideoFile = './uploads/' + videoFile;
+		var pathToVideoFile = '/tmp/uploads/' + videoFile;
 		var videoFileName = videoFile.substring(0, videoFile.indexOf("."));
 		var pathToAudioFile = dir + '/' + videoFileName + '.mp3';
 		var audioFile = undefined;
-		console.log(videoFileName);
 		try {
 			var process = new ffmpeg(pathToVideoFile);
-			process.then(function (video) {
-				video.fnExtractSoundToMP3(pathToAudioFile, function(err, file) {
-					if (err) {
-						console.log(err);
-					} else {
-						audioFile = file;
-						console.log('audio file ' + audioFile + ' saved');
-					}
+			return new Promise(function (resolve, reject) {
+				process.then(function (video) {
+					video.fnExtractSoundToMP3(pathToAudioFile, function (err, file) {
+						if (err) {
+							console.log(err);
+						} else {
+							audioFile = file;
+							console.log('audio file ' + audioFile + ' saved');
+							resolve(audioFile);
+						}
+					});
 				});
 			});
-		} catch(e) {
+
+		} catch (e) {
 			console.log(e.code);
 			console.log(e.msg);
 		}
-		return audioFile;
 	}
 
 	splitAudio(longAudio) {
-		// Split into n files
-		return [{
-			seqNum: 1,
-			fileName: './uploads/originalfile_seqNum.wav'
-		}];
+		// Split into files
+		execSync('cd /tmp/audio/ && ffmpeg -i ' + longAudio + ' -f segment -segment_time 300 -c copy out%03d.mp3');
+		var arr = execSync('cd /tmp/audio/ && ls out*.mp3').toString('utf8').split('\n');
+		arr = _.filter(arr, e => { return e.includes('.mp3'); });
+		execSync('cd /tmp/audio/ && rm *.mp3');
+
+		var returnArray = [];
+		for (let i = 0; i < arr.length; i++) {
+			var obj = {
+				seqNum: i,
+				fileName: arr[i]
+			};
+			returnArray.push(obj);
+		}
+		return returnArray;
+		// console.log(returnArray);
+
+		// return [{
+		// 	seqNum: 1,
+		// 	fileName: './uploads/originalfile_seqNum.wav'
+		// }];
 	}
 
 	async sendHTTPRequest(fileObject) {
 		let resFromWatson = await this.getResponseFromWatson(fileObject.fileName);
-		return new Promise(function(resolve, reject) {
+		return new Promise(function (resolve, reject) {
 			resolve({
 				seqNum: fileObject.seqNum,
 				resObj: resFromWatson
-			}); 
+			});
 		});
 		// return {
 		// 	seqNum: fileObject.seqNum,
@@ -181,30 +200,32 @@ class AudioComputeResource extends AbstractComputeResource {
 	}
 
 	getResponseFromWatson(fileName) {
-		var pathToFile = '../audio/' + fileName;
+		var pathToFile = '/tmp/audio/' + fileName;
 		this.params.audio = fs.createReadStream(pathToFile);
 		var that = this;
-		return new Promise(function(resolve, reject) {
-			speechToText.recognize(that.params, function(err, res) {
-			  if (err) {
-				console.log(err);
-				reject(err);
-			  }
-			  else {
-				resolve(res);
-			  }
+		return new Promise(function (resolve, reject) {
+			speechToText.recognize(that.params, function (err, res) {
+				if (err) {
+					console.log(err);
+					reject(err);
+				}
+				else {
+					resolve(res);
+				}
 			});
 		});
 	}
 
 	async process(fileName) {
 		let audioFile = await this.convertVideoToAudio(fileName);
-		// let audioArray = this.splitAudio(audioFile);
-		// let promiseArr = [];
-		let promiseArr = this.response_array;
-		// for (let i=0; i<audioArray.length; i++) {
-		// promiseArr.push(this.sendHTTPRequest(audioArray[i]));
-		// }
+		let audioArray = this.splitAudio(audioFile);
+		console.log(audioArray);
+		
+		let promiseArr = [];
+		// let promiseArr = this.response_array;
+		for (let i = 0; i < audioArray.length; i++) {
+			promiseArr.push(this.sendHTTPRequest(audioArray[i]));
+		}
 		var that = this;
 		Promise.all(promiseArr).then(() => {
 			promiseArr.sort(function (a, b) {
