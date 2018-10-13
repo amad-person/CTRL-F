@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
 import request from 'superagent';
-import { Line } from 'rc-progress';
 import './FileDrop.css'
 
 class FileDrop extends Component {
@@ -16,20 +15,11 @@ class FileDrop extends Component {
             files
         });
 
-        // API endpoint
+        // API endpoint http://54.255.249.117:3001/upload
         const url = 'http://localhost:3001/upload';
 
         // build POST request to endpoint
         const req = request.post(url);
-
-        // req.on('progress', (event) => {
-        //     let percent = Math.floor(event.percent);
-        //     if (percent >= 100) {
-        //         this.setState({ completed: 100 });
-        //     } else {
-        //         this.setState({ completed: percent });
-        //     }
-        // });
 
         // attach file to POST request
         req.attach(files[0].name, files[0]);
@@ -81,7 +71,6 @@ class FileDrop extends Component {
                         return "Drop a video file, or click to browse.";
                     }}
                 </Dropzone>
-                {/*<Line percent={this.state.completed} strokeWidth='1' strokeColor='#2db7f5' strokeLinecap='square' />*/}
                 <div className="DroppedFileInfo">{this.state.files.map(f => <p key={f.name}>{f.name} ~ {this.getFileSize(f.size)}</p>)}</div>
             </div>
         );
