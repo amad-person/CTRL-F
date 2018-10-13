@@ -29,6 +29,7 @@ class FileDrop extends Component {
         // send data to parent component
         const fileData = {
             files: this.state.files,
+            source_url: this.state.files[0].preview,
             doneUploading: true
         };
 
