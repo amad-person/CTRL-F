@@ -1,5 +1,6 @@
 const config = require('../config/settings');
 const { execSync } = require('child_process');
+const _ = require('underscore');
 
 /**
  * Defines structure for a compute resource. Any backend processing required to happen to be included in this directory.
@@ -26,13 +27,41 @@ class VideoComputeResource extends AbstractComputeResource {
         this._settings = settings || config;
     }
 
+    
+
+    /**
+     * Finds the array containing time stamps where relevant words occur
+     * @param {*} data 
+     * @param {*} queryString 
+     */
+    findMatchingTimeStamps(data, queryString) {
+        let wordTimeMappings = data.wordTimeMappings;
+        let words = _.keys(wordTimeMappings);
+        let timeList = [];
+
+        _.filter(words, word => {
+            return (word.includes(queryString));
+        }).forEach(matchingKey => {
+            timeList = timeList.concat(wordTimeMappings[matchingKey]);
+        });
+
+        timeList = _.uniq(timeList).sort((a, b) => (a-b));
+
+        return timeList;
+    }
+
     async process(fileName) {
-        var ret = execSync('python compute/test.py');
-        return ret.toString('utf8');
+        var ret = execSync('python ' + __dirname + '/process_upload.py /tmp/uploads/' + fileName);
+        let data = require('./data.json');
+        // let mapping = ret.toString('utf8');
+        // mapping = JSON.parse(mapping);
+        return 'Done';
     }
 
     async query(fileName, queryString) {
-        return 'Video query results';
+        let data = require('./data.json');
+        let timeStamps = this.findMatchingTimeStamps(data, queryString)
+        return timeStamps;
     }
 }
 
@@ -76,7 +105,10 @@ class CollatedComputeResource extends AbstractComputeResource {
     }
 
     async collateResults(audResults, vidResults) {
-        return audResults + ' ' + vidResults;
+        return {
+            "audioResponse": audResults, 
+            "videoResponse": vidResults
+        };
     }
 
 }

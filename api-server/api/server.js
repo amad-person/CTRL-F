@@ -6,7 +6,7 @@ const config = require('../config/settings');
 var app = express();
 const multer = require('multer');
 app.use(multer({
-    dest: './uploads/'
+    dest: '/tmp/uploads/'
 }).any());
 
 // List of routers
