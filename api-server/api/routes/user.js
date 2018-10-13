@@ -102,8 +102,9 @@ router.get('/query', async function(req, res) {
     let queryString = req.get('queryString');
     if (fileMap[id]) {
         let audResults = await audProcess.query(fileMap[id], queryString);
-        let vidResults = await vidProcess.query(fileMap[id], queryString);
-        let finalResults = await combinedResource.collateResults(audResults, vidResults);
+        // let vidResults = await vidProcess.query(fileMap[id], queryString);
+        // let finalResults = await combinedResource.collateResults(audResults, vidResults);
+        let finalResults = audResults;
         res.setHeader('Content-Type', 'application/json');
         res.end(JSON.stringify({ result: finalResults }));
     } else {
