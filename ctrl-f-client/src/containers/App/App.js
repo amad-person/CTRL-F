@@ -72,7 +72,7 @@ class App extends Component {
                                     Process
                                 </Button>
                                 </div>:
-                                'Upload a video!' :
+                                null :
                             null
                     }
                 </div>
