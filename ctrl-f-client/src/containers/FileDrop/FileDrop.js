@@ -15,7 +15,7 @@ class FileDrop extends Component {
             files
         });
 
-        // API endpoint
+        // API endpoint http://54.255.249.117:3001/upload
         const url = 'http://localhost:3001/upload';
 
         // build POST request to endpoint
@@ -29,6 +29,7 @@ class FileDrop extends Component {
         // send data to parent component
         const fileData = {
             files: this.state.files,
+            source_url: this.state.files[0].preview,
             doneUploading: true
         };
 
@@ -59,7 +60,7 @@ class FileDrop extends Component {
                 >
                     {({ isDragAccept, isDragReject, acceptedFiles, rejectedFiles }) => {
                         if (acceptedFiles.length || rejectedFiles.length) {
-                            return `Uploaded file, now click on process!`;
+                            return `After the upload finishes, click on query!`;
                         }
                         if (isDragAccept) {
                             return "You can upload this file!";

@@ -4,7 +4,7 @@ import './Header.css';
 const header = () => {
     return (
         <div className="Header">
-            <h1>CTRL-F</h1>
+            <h1>Find and Seek</h1>
         </div>
     );
 };

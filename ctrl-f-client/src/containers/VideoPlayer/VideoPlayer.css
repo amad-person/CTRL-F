@@ -1,0 +1,14 @@
+.VideoPlayer {
+    margin: 10vh;
+    align-content: center;
+}
+
+.Player {
+    padding: 10vh;
+    margin: 10vh;
+    display: flex;
+    min-width: 80vh;
+    min-height: auto;
+    flex-direction: column;
+    justify-content: center;
+}
