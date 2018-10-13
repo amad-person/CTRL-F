@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Button } from 'reactstrap';
+import { Container, Row, Col, Button, CardDeck, Card } from 'reactstrap';
 import QueryForm from "../QueryForm/QueryForm";
 
 class VideoPlayer extends Component {
@@ -8,8 +8,6 @@ class VideoPlayer extends Component {
     }
 
     render() {
-        const time = 90;
-
         const paddingStyle = {
             padding: '20px'
         };
@@ -30,11 +28,17 @@ class VideoPlayer extends Component {
                     </Col>
                 </Row>
 
-                <Row>
-                    <Col>
-                        <Button color="primary" onClick={() => this.seek(time)}>01:30</Button>
-                    </Col>
-                </Row>
+                <CardDeck>
+                    <Card>
+                        <Button color="primary" onClick={() => this.seek(30)}>00:30</Button>
+                    </Card>
+                    <Card>
+                        <Button color="primary" onClick={() => this.seek(90)}>01:30</Button>
+                    </Card>
+                    <Card>
+                        <Button color="primary" onClick={() => this.seek(150)}>02:30</Button>
+                    </Card>
+                </CardDeck>
             </Container>
         )
     }
