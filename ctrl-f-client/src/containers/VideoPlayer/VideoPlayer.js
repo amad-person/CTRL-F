@@ -1,8 +1,25 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Button, CardDeck, Card } from 'reactstrap';
+import { Container, Row, Col, Button, CardDeck, Card, Alert } from 'reactstrap';
 import QueryForm from "../QueryForm/QueryForm";
+import moment from 'moment';
 
 class VideoPlayer extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            audioSeekTimes: [],
+            videoSeekTimes: []
+        };
+    }
+
+    dataFromQuery = (dataResults) => {
+        this.setState({
+            audioSeekTimes: dataResults.audioSeekTimes,
+            videoSeekTimes: dataResults.videoSeekTimes
+        });
+    };
+
     seek(time) {
         this.refs.videoRef.currentTime = time;
     }
@@ -11,6 +28,44 @@ class VideoPlayer extends Component {
         const paddingStyle = {
             padding: '20px'
         };
+
+        let audioSeekButtons = (
+            <Alert color="danger">No results found!</Alert>
+        );
+        if (this.state.audioSeekTimes.length !== 0) {
+            audioSeekButtons = (
+                <CardDeck>
+                    { this.state.audioSeekTimes.map((time) => {
+                        return (
+                            <Card>
+                                <Button color="primary" onClick={() => this.seek(Math.floor(time))}>
+                                    {moment().startOf('day').seconds(time).format('HH:mm:ss')}
+                                </Button>
+                            </Card>
+                        )})
+                    }
+                </CardDeck>
+            );
+        }
+
+        let videoSeekButtons = (
+            <Alert color="danger">No results found!</Alert>
+        );
+        if (this.state.videoSeekTimes.length !== 0) {
+            videoSeekButtons = (
+                <CardDeck>
+                    { this.state.videoSeekTimes.map((time) => {
+                        return (
+                            <Card>
+                                <Button color="primary" onClick={() => this.seek(Math.floor(time))}>
+                                    {moment().startOf('day').seconds(time).format('HH:mm:ss')}
+                                </Button>
+                            </Card>
+                        )})
+                    }
+                </CardDeck>
+            );
+        }
 
         return (
             <Container className="VideoPlayer">
@@ -24,21 +79,15 @@ class VideoPlayer extends Component {
 
                 <Row style={paddingStyle}>
                     <Col>
-                        <QueryForm/>
+                        <QueryForm dataFromQuery={this.dataFromQuery}/>
                     </Col>
                 </Row>
 
-                <CardDeck>
-                    <Card>
-                        <Button color="primary" onClick={() => this.seek(30)}>00:30</Button>
-                    </Card>
-                    <Card>
-                        <Button color="primary" onClick={() => this.seek(90)}>01:30</Button>
-                    </Card>
-                    <Card>
-                        <Button color="primary" onClick={() => this.seek(150)}>02:30</Button>
-                    </Card>
-                </CardDeck>
+                <p style={paddingStyle}>Audio Search Results</p>
+                {audioSeekButtons}
+
+                <p style={paddingStyle}>Video Search Results</p>
+                {videoSeekButtons}
             </Container>
         )
     }
