@@ -51,12 +51,14 @@ for time, text in timeTextMappings.items():
         if word not in wordTimeMappings:
             wordTimeMappings[word] = list()
         
-        wordTimeMappings[word].append(time)
+        wordTimeMappings[word].append(time/1000)
 
 
 results = dict()
 results['wordTimeMappings'] = wordTimeMappings
 results['timeTextMappings'] = timeTextMappings
 
-with open('data.json', 'w') as outfile:
+currentDir = os.path.dirname(os.path.abspath(__file__))
+
+with open(os.path.join(currentDir, 'data.json'), 'w') as outfile:
     json.dump(results, outfile)

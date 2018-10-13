@@ -27,8 +27,12 @@ router.post('/upload', function (req, res) {
                 console.log(err);
             });
         });
-        // fileMap[fileCounter] = req.files[0].originalname; 
-        res.end('File uploaded');
+        // fileMap[fileCounter] = req.files[0].originalname;
+        let audResult = audProcess.process('input.mp4');
+        let vidResult = vidProcess.process('input.mp4');
+        Promise.all([audResult, vidResult]).then(() => {
+            res.end('File uploaded');
+        });
         // fileCounter++;
     } else if (!req.files || req.files.length === 0) {
         res.statusCode = 404;
