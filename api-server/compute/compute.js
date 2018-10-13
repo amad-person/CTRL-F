@@ -54,14 +54,14 @@ class VideoComputeResource extends AbstractComputeResource {
     async process(fileName) {
         let text = 'python ' + __dirname + '/process_upload.py /tmp/uploads/' + fileName
         var ret = execSync('python ' + __dirname + '/process_upload.py /tmp/uploads/' + fileName);
-        let data = require(__dirname + '/data2.json');
+        let data = require(__dirname + '/data.json');
         // let mapping = ret.toString('utf8');
         // mapping = JSON.parse(mapping);
         return 'Done';
     }
     
     async query(fileName, queryString) {
-        let data = require('./data2.json');
+        let data = require('./data.json');
         let timeStamps = this.findMatchingTimeStamps(data, queryString)
         return timeStamps;
     }
@@ -77,8 +77,8 @@ class AudioComputeResource extends AbstractComputeResource {
         super();
         this._settings = settings || config;
         this.speechToText = new SpeechToTextV1({
-            username: 'c8bb058c-fea8-4665-b0ca-254985e79cbd',
-            password: 'Mo3DAlb2Fnk7',
+            username: 'f4266932-5fa5-4bfb-91e6-1c36e6a9476d',
+            password: 'ZDJwVRqeLAsd',
             url: 'https://stream.watsonplatform.net/speech-to-text/api'
         });
         this.params = {
@@ -193,9 +193,18 @@ class AudioComputeResource extends AbstractComputeResource {
         execSync('cd /tmp/audio/ && ffmpeg -i ' + longAudio + ' -f segment -segment_time 300 -c copy out%03d.mp3');
         var arr = execSync('cd /tmp/audio/ && ls out*.mp3').toString('utf8').split('\n');
         arr = _.filter(arr, e => { return e.includes('.mp3'); });
-        execSync('cd /tmp/audio/ && rm *.mp3');
         
         var returnArray = [];
+        arr = arr.sort((a, b) => {
+            let keyA = a.split('.')[0].replace('out', '');
+            let keyB = b.split('.')[0].replace('out', '');
+            keyA = parseInt(keyA);
+            keyB = parseInt(keyB);
+            if (keyA < keyB) return -1;
+            if (keyA > keyB) return 1;
+            return 0;
+        });
+
         for (let i = 0; i < arr.length; i++) {
             var obj = {
                 seqNum: i,
@@ -213,17 +222,35 @@ class AudioComputeResource extends AbstractComputeResource {
     }
     
     async sendHTTPRequest(fileObject) {
+        console.log('Before resFromWatson');
         let resFromWatson = await this.getResponseFromWatson(fileObject.fileName);
-        return new Promise(function (resolve, reject) {
-            resolve({
-                seqNum: fileObject.seqNum,
-                resObj: resFromWatson
-            });
-        });
-        // return {
-        // 	seqNum: fileObject.seqNum,
-        // 	resObj: resFromWatson
-        // };
+        console.log('After resFromWatson');
+        return {
+            seqNum: fileObject.seqNum,
+            res: resFromWatson
+        }; 
+        // this.getResponseFromWatson(fileObject.fileName).then(function (resolve, reject) {
+        //     (result) => {
+        //         console.log('Received response for seq: ', fileObject.seqNum);
+        //         console.log('Response: ', result);
+        //         resolve({
+        //             seqNum: fileObject.seqNum,
+        //             resObj: result
+        //         });
+        //     }
+        // });
+        // return new Promise(function (resolve, reject) {
+        //     resolve({
+        //         seqNum: fileObject.seqNum,
+        //         resObj: resFromWatson
+        //     });
+        // });
+        // resFromWatson.then(() => {
+        //     return {
+        //         seqNum: fileObject.seqNum,
+        //         resObj: resFromWatson
+        //     };
+        // });
     }
     
     getResponseFromWatson(fileName) {
@@ -231,7 +258,7 @@ class AudioComputeResource extends AbstractComputeResource {
         this.params.audio = fs.createReadStream(pathToFile);
         var that = this;
         return new Promise(function (resolve, reject) {
-            speechToText.recognize(that.params, function (err, res) {
+            that.speechToText.recognize(that.params, function (err, res) {
                 if (err) {
                     console.log(err);
                     reject(err);
@@ -244,38 +271,46 @@ class AudioComputeResource extends AbstractComputeResource {
     }
     
     async process(fileName) {
+        console.log('Processing file: ', fileName);
         let audioFile = await this.convertVideoToAudio(fileName);
         let audioArray = this.splitAudio(audioFile);
         console.log(audioArray);
         
-        // let promiseArr = [];
-        let promiseArr = this.response_array;
-        // for (let i = 0; i < audioArray.length; i++) {
-        // 	promiseArr.push(this.sendHTTPRequest(audioArray[i]));
-        // }
+        let promiseArr = [];
+        // let promiseArr = this.response_array;
+        for (let i = 0; i < audioArray.length; i++) {
+            console.log('Sending request: ', audioArray[i]);
+        	promiseArr.push(this.sendHTTPRequest(audioArray[i]));
+        }
         var that = this;
         Promise.all(promiseArr).then(() => {
+            console.log('All promises resolved');
             promiseArr.sort(function (a, b) {
                 var keyA = a.seqNum, keyB = b.seqNum;
                 if (keyA < keyB) return -1;
                 if (keyA > keyB) return 1;
                 return 0;
             });
+            
+            console.log('Removing files');
+            execSync('cd /tmp/audio/ && rm *.mp3');
+
             for (let i = 0; i < promiseArr.length; i++) {
                 promiseArr[i].then(result => {
                     that.generateWordMap(result);
                 });
             }
+
+            return 'Done processing ' + fileName;
         })
         .catch(err => {
             return 'Error prcessing file: ' + err;
         });
-        
-        return 'Processing file audio ' + fileName;
     }
     
     async query(fileName, queryString) {
         // await this.process(fileName);
+        console.log('Called query with: ', fileName, queryString);
         return this.word_map.get(queryString);
     }
     
