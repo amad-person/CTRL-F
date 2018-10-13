@@ -32,7 +32,7 @@ class App extends Component {
         });
     };
 
-    toggleVideoPlayer = () => {
+    processVideo = () => {
         this.setState({
             showingPlayer: true
         });
@@ -68,7 +68,7 @@ class App extends Component {
                             this.state.doneUploading ?
                                 <div>
                                 <Button tag={Link} to="/process" color="success" size="lg"
-                                        onClick={this.toggleVideoPlayer}>
+                                        onClick={this.processVideo}>
                                     Process
                                 </Button>
                                 </div>:

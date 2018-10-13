@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Row, Col, Button } from 'reactstrap';
+import QueryForm from "../QueryForm/QueryForm";
 
 class VideoPlayer extends Component {
     seek(time) {
@@ -7,7 +8,6 @@ class VideoPlayer extends Component {
     }
 
     render() {
-        console.log(this.props.source_url);
         const time = 90;
 
         const paddingStyle = {
@@ -21,6 +21,12 @@ class VideoPlayer extends Component {
                         <video ref="videoRef" className="Player" width="80%" maxheight="100%" controls>
                             <source src={this.props.source_url} type={"video/mp4"}/>
                         </video>
+                    </Col>
+                </Row>
+
+                <Row style={paddingStyle}>
+                    <Col>
+                        <QueryForm/>
                     </Col>
                 </Row>
 
