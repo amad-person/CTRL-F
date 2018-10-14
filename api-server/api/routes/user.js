@@ -30,10 +30,17 @@ router.post('/upload', function (req, res) {
         // fileMap[fileCounter] = req.files[0].originalname;
         let audResult = audProcess.process('input.mp4');
         let vidResult = vidProcess.process('input.mp4');
-        Promise.all([audResult, vidResult]).then(() => {
+	    console.log('BEFOER PROMISE.ALL: audio:', audResult);
+	    console.log('BEFORE PROMISE.ALL: video:', vidProcess);
+
+        //res.end('File uploaded');
+        return Promise.all([audResult, vidResult]).then(() => {
             // res.setHeader('Access-Control-Allow-Origin', 'localhost:3000');
             // res.setHeader('Access-Control-Allow-Methods', 'POST');
-            res.end('File uploaded');
+            console.log('Video and audio done');
+		console.log('Audio results ', audResult);
+	    console.log('Video results ', vidResult);
+	    res.end('File uploaded');
         });
         // fileCounter++;
     } else if (!req.files || req.files.length === 0) {
