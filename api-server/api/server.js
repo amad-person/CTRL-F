@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { user, admin } = require('./routes');
 const config = require('../config/settings');
+const cors = require('cors');
 
 var app = express();
 const multer = require('multer');
@@ -10,6 +11,7 @@ app.use(multer({
 }).any());
 
 // List of routers
+app.use(cors())
 app.use('/', user);
 app.use('/admin', admin);
 

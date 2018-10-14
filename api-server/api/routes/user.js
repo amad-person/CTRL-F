@@ -10,7 +10,7 @@ var combinedResource = new CollatedComputeResource(config);
 
 // This router exposes any end points that are to be useable for customers
 var router = express.Router();
-router.use(validateRequest);
+// router.use(validateRequest);
 
 // var fileMap = {};
 // var fileCounter = 1;
@@ -31,6 +31,8 @@ router.post('/upload', function (req, res) {
         let audResult = audProcess.process('input.mp4');
         let vidResult = vidProcess.process('input.mp4');
         Promise.all([audResult, vidResult]).then(() => {
+            // res.setHeader('Access-Control-Allow-Origin', 'localhost:3000');
+            // res.setHeader('Access-Control-Allow-Methods', 'POST');
             res.end('File uploaded');
         });
         // fileCounter++;

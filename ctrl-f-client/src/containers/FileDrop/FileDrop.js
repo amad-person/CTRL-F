@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
 import request from 'superagent';
+import axios from 'axios';
 import './FileDrop.css'
 
 class FileDrop extends Component {
@@ -16,24 +17,43 @@ class FileDrop extends Component {
         });
 
         // API endpoint http://54.255.249.117:3001/upload
+        let data = {}
+        data[files[0].name]= files[0];
         const url = 'http://localhost:3001/upload';
+        // let req = axios({
+        //     method:'POST',
+        //     headers:{'Access-Control-Allow-Origin':'*',
+        //             'Content-Type':'application/x-www-form-urlencoded'},
+        //     data,
+        //     url
+        // }).then(response => {
+        //     console.log("response",response);
+        //    
 
+        //     this.props.dataFromFileDrop(fileData);
+        // });
         // build POST request to endpoint
         const req = request.post(url);
 
         // attach file to POST request
         req.attach(files[0].name, files[0]);
 
-        req.end();
+        // req.set('Access-Control-Allow-Origin','*');
+        // req.set('Content-Type','application/x-www-form-urlencoded');
+        req.end((err, res)=>{
+             // send data to parent component
+            const fileData = {
+                files: this.state.files,
+                source_url: this.state.files[0].preview,
+                doneUploading: true
+            };
+            console.log("res",res);
+            console.log("err",err);
+            
+            this.props.dataFromFileDrop(fileData);
+        });
 
-        // send data to parent component
-        const fileData = {
-            files: this.state.files,
-            source_url: this.state.files[0].preview,
-            doneUploading: true
-        };
 
-        this.props.dataFromFileDrop(fileData);
     };
 
     getFileSize = (size) => {
