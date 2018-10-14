@@ -314,8 +314,9 @@ class AudioComputeResource extends AbstractComputeResource {
         // await this.process(fileName);
         console.log('Called query with: ', fileName, queryString);
         console.log(this.word_map.get(queryString));
-        return this.word_map.get(queryString);
-        
+        let result = this.word_map.get(queryString);
+        result = _.uniq(result);
+        return result;
     }
     
     logMapElements(value, key, map) {
