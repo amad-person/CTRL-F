@@ -61,6 +61,7 @@ class VideoComputeResource extends AbstractComputeResource {
     }
     
     async query(fileName, queryString) {
+        queryString = queryString.toLowerCase();
         let data = require('./data.json');
         let timeStamps = this.findMatchingTimeStamps(data, queryString)
         return timeStamps;
@@ -309,6 +310,7 @@ class AudioComputeResource extends AbstractComputeResource {
     }
     
     async query(fileName, queryString) {
+        queryString = queryString.toLowerCase();
         // await this.process(fileName);
         console.log('Called query with: ', fileName, queryString);
         console.log(this.word_map.get(queryString));
