@@ -80,7 +80,7 @@ class FileDrop extends Component {
                 >
                     {({ isDragAccept, isDragReject, acceptedFiles, rejectedFiles }) => {
                         if (acceptedFiles.length || rejectedFiles.length) {
-                            return `After the upload finishes, click on query!`;
+                            return `Please wait for the query button to appear!`;
                         }
                         if (isDragAccept) {
                             return "You can upload this file!";
@@ -88,7 +88,7 @@ class FileDrop extends Component {
                         if (isDragReject) {
                             return "This file can't be uploaded.";
                         }
-                        return "Drop a video file, or click to browse.";
+                        return "Drag and drop a video file here!";
                     }}
                 </Dropzone>
                 <div className="DroppedFileInfo">{this.state.files.map(f => <p key={f.name}>{f.name} ~ {this.getFileSize(f.size)}</p>)}</div>
