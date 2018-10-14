@@ -21,8 +21,9 @@ class QueryForm extends Component {
         console.log('A query was submitted: ' + this.state.value);
 
         // call API deployed at http://54.255.249.117:3001/query
-        const url = 'http://localhost:3001/query';
-
+        // const url = 'http://localhost:3001/query';
+	
+	const url = 'http://54.255.249.117:3001/query';
         const responseParsed = {
             audioResponse: [],
             videoResponse: []

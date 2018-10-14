@@ -19,7 +19,7 @@ class FileDrop extends Component {
         // API endpoint http://54.255.249.117:3001/upload
         let data = {}
         data[files[0].name]= files[0];
-        const url = 'http://localhost:3001/upload';
+        const url = 'http://54.255.249.117:3001/upload';
         // let req = axios({
         //     method:'POST',
         //     headers:{'Access-Control-Allow-Origin':'*',
