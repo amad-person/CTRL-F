@@ -4,7 +4,6 @@ import sys
 import math
 from PIL import Image
 import pytesseract
-import enchant
 import json
 
 filename = sys.argv[1]

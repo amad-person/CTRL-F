@@ -284,7 +284,7 @@ class AudioComputeResource extends AbstractComputeResource {
         	promiseArr.push(this.sendHTTPRequest(audioArray[i]));
         }
         var that = this;
-        Promise.all(promiseArr).then(() => {
+        return Promise.all(promiseArr).then(() => {
             console.log('All promises resolved');
             promiseArr.sort(function (a, b) {
                 var keyA = a.seqNum, keyB = b.seqNum;
@@ -301,8 +301,8 @@ class AudioComputeResource extends AbstractComputeResource {
                     that.generateWordMap(result);
                 });
             }
-
-            return 'Done processing ' + fileName;
+            
+            //return 'Done processing ' + fileName;
         })
         .catch(err => {
             return 'Error prcessing file: ' + err;

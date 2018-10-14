@@ -69,7 +69,7 @@ class App extends Component {
                                 <div>
                                 <Button tag={Link} to="/process" color="success" size="lg"
                                         onClick={this.processVideo}>
-                                    Process
+                                    Query
                                 </Button>
                                 </div>:
                                 null :
