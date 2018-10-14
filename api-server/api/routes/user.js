@@ -34,11 +34,13 @@ router.post('/upload', function (req, res) {
             // res.setHeader('Access-Control-Allow-Origin', 'localhost:3000');
             // res.setHeader('Access-Control-Allow-Methods', 'POST');
             res.end('File uploaded');
+            return;
         });
         // fileCounter++;
     } else if (!req.files || req.files.length === 0) {
         res.statusCode = 404;
         res.end('File not received');
+        return;
     } else if (req.files.length > 1) {
         req.files.forEach(element => {
             fs.unlinkSync(element.path, err => {
@@ -47,6 +49,7 @@ router.post('/upload', function (req, res) {
         });
         res.statusCode = 400;
         res.end('Only one file per request');
+        return;
     }
 });
 

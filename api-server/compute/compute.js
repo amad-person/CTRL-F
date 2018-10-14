@@ -190,7 +190,7 @@ class AudioComputeResource extends AbstractComputeResource {
     
     splitAudio(longAudio) {
         // Split into files
-        execSync('cd /tmp/audio/ && ffmpeg -i ' + longAudio + ' -f segment -segment_time 300 -c copy out%03d.mp3');
+        execSync('cd /tmp/audio/ && ffmpeg -i ' + longAudio + ' -f segment -segment_time 1200 -c copy out%03d.mp3');
         var arr = execSync('cd /tmp/audio/ && ls out*.mp3').toString('utf8').split('\n');
         arr = _.filter(arr, e => { return e.includes('.mp3'); });
         
@@ -311,7 +311,9 @@ class AudioComputeResource extends AbstractComputeResource {
     async query(fileName, queryString) {
         // await this.process(fileName);
         console.log('Called query with: ', fileName, queryString);
+        console.log(this.word_map.get(queryString));
         return this.word_map.get(queryString);
+        
     }
     
     logMapElements(value, key, map) {
@@ -327,6 +329,9 @@ class CollatedComputeResource extends AbstractComputeResource {
     }
     
     async collateResults(audResults, vidResults) {
+        audResults = audResults || [];
+        vidResults = vidResults || [];
+
         return {
             "audioResponse": audResults,
             "videoResponse": vidResults
