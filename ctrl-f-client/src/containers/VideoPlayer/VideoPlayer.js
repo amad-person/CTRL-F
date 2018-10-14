@@ -15,9 +15,12 @@ class VideoPlayer extends Component {
 
     dataFromQuery = (dataResults) => {
         this.setState({
-            audioSeekTimes: dataResults.audioSeekTimes,
-            videoSeekTimes: dataResults.videoSeekTimes
+            audioSeekTimes: dataResults.audioResponse,
+            videoSeekTimes: dataResults.videoResponse
         });
+
+        console.log('State for audio seek times', this.state.audioSeekTimes);
+        console.log('State for video seek times', this.state.videoSeekTimes);
     };
 
     seek(time) {

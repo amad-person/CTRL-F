@@ -24,20 +24,23 @@ class QueryForm extends Component {
         const url = 'http://localhost:3001/query';
 
         const responseParsed = {
-            audioSeekTimes: [],
-            videoSeekTimes: []
+            audioResponse: [],
+            videoResponse: []
         };
 
         request.get(url)
             .set('API_KEY', 'sampleKey1')
             .set('queryString', this.state.value)
             .then((res) => {
-                console.log(res.body);
-                responseParsed.audioSeekTimes = res.body.audioResponse;
-                responseParsed.videoSeekTimes = res.body.videoResponse;
+                console.log('query form audio seek times', res.body.audioResponse);
+                console.log('query form video seek times', res.body.videoResponse);
+                responseParsed.audioResponse = res.body.audioResponse;
+                responseParsed.videoResponse = res.body.videoResponse;
+
+                this.props.dataFromQuery(responseParsed);
             });
 
-        this.props.dataFromQuery(responseParsed);
+ 
         event.preventDefault();
     }
 
