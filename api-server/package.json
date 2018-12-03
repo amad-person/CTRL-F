@@ -16,7 +16,12 @@
   "dependencies": {
     "body-parser": "",
     "child_process": "^1.0.2",
+    "cors": "^2.8.4",
     "express": "",
-    "multer": "^1.4.0"
+    "express-ipfilter": "^0.3.1",
+    "ffmpeg": "0.0.4",
+    "multer": "^1.4.0",
+    "underscore": "^1.9.1",
+    "watson-developer-cloud": "^3.11.1"
   }
 }
